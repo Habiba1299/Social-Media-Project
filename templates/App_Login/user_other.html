@@ -1,0 +1,76 @@
+{% extends 'navbar.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title_block %} {{user_other.user_profile.full_name}} (@ {{user_other.username}}) {% endblock%}
+
+{% block css_block %}
+<style>
+    .crop {
+    /* width: 1140px;  */
+    overflow: hidden;
+  }
+
+  .crop img {
+    width: 330px;
+    height: 300px;
+    margin: 1px;
+  }
+    
+</style>
+
+{% endblock %}
+
+
+{% block body_block %}
+
+<!-- <h1>User Profile</h1> -->
+
+<div class="row">
+    <div class="col-sm-4">
+
+        {%if user_other.user_profile.profile_pic %}
+        <img src="/media/{{user_other.user_profile.profile_pic}}" width="250px" height="250px" class="rounded-circle">
+        {%else %}
+        <img src="/media/default.png" width="250px" height="250px" class="rounded-circle">
+        {% endif %}
+
+    </div>
+
+    <div class="col-sm-8">
+
+        <h3>{{user_other.username}} &nbsp; 
+            {% if not already_followed %}
+                <a href="{%url 'App_Login:follow' user_other.username%}" class="btn btn-primary">Follow</a>
+            {%else %}
+                <a href="{%url 'App_Login:unfollow' user_other.username%}" class="btn btn-primary">Unfollow</a>
+            {% endif %}
+        </h3>
+        <br>
+        <h3>{{user_other.post.count}} posts &nbsp; &nbsp; {{user_other.following.count}} followers &nbsp; &nbsp;
+            {{user_other.follower.count}} following &nbsp; &nbsp; </h3>
+        <br>
+        <h4>{{user_other.user_profile.full_name}}</h4>
+        <h6>{{user_other.user_profile.description | linebreaks }}</h6>
+    </div>
+</div>
+<hr>
+
+
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-11 crop">
+        {% for post in user_other.post.all %} 
+        <img src="/media/{{post.image}}" title="{{post.caption}}">
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<br>
+<br>
+
+
+
+{% endblock%}

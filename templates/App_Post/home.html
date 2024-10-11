@@ -1,0 +1,98 @@
+{% extends 'navbar.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title_block %} {{title}} {% endblock%}
+
+{% block css_block %}
+{% endblock %}
+
+
+{% block body_block %}
+
+
+
+    {% if search %}
+
+        {% for user in result %}
+        <br>
+        <div class="row">
+            <div class="col-sm-2">
+                {%if user.user_profile.profile_pic %}
+                 
+                    <img src="/media/{{user.user_profile.profile_pic}}" alt="" width="100px" height="100px" class="rounded-circle">
+                {%else %}
+                    <img src="/media/default.png" alt="" width="100px" height="100px" class="rounded-circle">
+                {% endif %}
+            </div>
+
+            <div class="col-sm-10">
+                <a href="{%url 'App_Login:user' user.username%}">{{user.username}}</a>
+                <br>
+                <h5> {{user.user_profile.full_name}}</h5>
+            </div>
+        </div>
+
+        {% endfor %}
+    {% else %}
+        <h3>Homepage</h3>
+        <br>
+        <div class="row">
+            <div class="col-sm-8">
+            
+                {% for post in posts %}
+                    <div style="border:1px solid grey">
+                        <div style="padding: 10px;">
+                            {%if post.author.user_profile.profile_pic %}
+                                
+                            <img src="/media/{{post.author.user_profile.profile_pic}}" alt="" width="40px" height="40px" class="rounded-circle">
+                            {%else %}
+                            <img src="/media/default.png" alt="" width="40px" height="40px" class="rounded-circle">
+                            {% endif %}
+                            
+                            <a href="{%url 'App_Login:user' post.author %}">{{post.author}}</a> <br>
+                            {{post.update_date}} <br>
+                        </div>
+                        <img src="/media/{{post.image}}" alt="" width="100%" >
+                        
+                        <div style="padding:20px">
+                            {{ post.caption }} <br>
+                            <hr>
+                            {% if post.pk in liked_post_list%}
+                                <a href="{% url 'App_Post:unliked' post.pk %}"><i class="fa fa-heart" style="font-size:36px;"></i></a>
+                                
+                            {% else %}
+                                <a href="{% url 'App_Post:liked' post.pk %}"><i class="fa fa-heart-o" style="font-size:36px;"></i></a>
+                                
+                            {% endif %}
+                            &nbsp; &nbsp; {{post.liked_post.count}} likes <br>
+                        </div>
+                    </div>    
+                    <br>   
+                {% endfor %}
+            </div>
+
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-5">
+                        {%if user.user_profile.profile_pic %}
+                         
+                            <img src="/media/{{user.user_profile.profile_pic}}" alt="" width="75px" height="75px" class="rounded-circle">
+                        {%else %}
+                            <img src="/media/default.png" alt="" width="75px" height="75px" class="rounded-circle">
+                        {% endif %}
+                    </div>
+        
+                    <div class="col-sm-7">
+                        <a href="{%url 'App_Login:user' user.username%}">{{user.username}}</a>
+                        <h6> {{user.user_profile.full_name}}</h6>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    
+    {% endif %}
+
+
+{% endblock %}
